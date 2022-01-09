@@ -8,7 +8,9 @@ public class Main {
 
     public static void main(String[] args) {
         Vertx vertx = Vertx.vertx();
-        ExchangeListener exchangeListener = new ExchangeListener();
+        String product = args.length > 0 ? args[0] : "ETH-USD";
+
+        ExchangeListener exchangeListener = new ExchangeListener(new Subscription());
         vertx.deployVerticle(exchangeListener, ar -> {
             if (ar.failed()) {
                 log.severe("Error while deploying exchange listener");
@@ -18,7 +20,7 @@ public class Main {
             }
             else {
                 log.info(String.format("Successfully deployed exchange listener. Deployment ID: %s", ar.result()));
-                exchangeListener.listen("", null);
+                exchangeListener.listen(product, null);
             }
         });
 

@@ -6,12 +6,15 @@ import io.vertx.core.Promise;
 import io.vertx.core.http.HttpClient;
 import io.vertx.core.http.HttpClientOptions;
 import io.vertx.core.http.WebSocket;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 
 @Log
+@RequiredArgsConstructor
 public class ExchangeListener extends AbstractVerticle {
 
     private WebSocket webSocket;
+    private final Subscription subscription;
 
     @Override
     public void start(Promise<Void> startPromise) {
@@ -35,6 +38,7 @@ public class ExchangeListener extends AbstractVerticle {
 
     public void listen(String product, Handler<Order> newOrderHandler) {
         webSocket.textMessageHandler(System.out::println);
-        webSocket.writeTextMessage("{\"type\":\"subscribe\",\"product_ids\":[\"ETH-USD\",\"ETH-EUR\"],\"channels\":[\"level2\"]}");
+        SubscriptionMessage subscriptionMessage = subscription.subscribe(product);
+        webSocket.writeTextMessage(subscriptionMessage.toString());
     }
 }
