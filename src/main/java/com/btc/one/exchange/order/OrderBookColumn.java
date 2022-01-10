@@ -1,12 +1,18 @@
 package com.btc.one.exchange.order;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 @RequiredArgsConstructor
+@Getter
+@Setter
 public class OrderBookColumn {
+    @JsonIgnore
     private final int maxSize;
     private final ConcurrentSkipListSet<Order> column = new ConcurrentSkipListSet<>();
 

@@ -1,7 +1,12 @@
 package com.btc.one.exchange.order;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Iterator;
 
+@Getter
+@Setter
 public class OrderBook {
     private OrderBookColumn bids = new OrderBookColumn(10);
     private OrderBookColumn asks = new OrderBookColumn(10);
