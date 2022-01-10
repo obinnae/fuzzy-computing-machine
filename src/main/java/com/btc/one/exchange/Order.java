@@ -5,7 +5,7 @@ import lombok.NonNull;
 import lombok.Value;
 
 @Value
-public class Order {
+public class Order implements Comparable<Order> {
     @NonNull
     OrderType type;
     String product;
@@ -35,5 +35,16 @@ public class Order {
 
     private static Double size(OrderSubscriptionResponse orderSubscriptionResponse) {
         return Double.valueOf(orderSubscriptionResponse.getChanges().get(0).get(2));
+    }
+
+    @Override
+    public int compareTo(Order o) {
+        // For the purpose of the order book we are trying to build, only orders of similar types (Buy or Sell) will ever have to be compared
+        if (this.type == OrderType.BUY && o.type == OrderType.BUY)
+            return o.price.compareTo(this.price); // keep higher bid prices top of book
+        else if (this.type == OrderType.SELL && o.type == OrderType.SELL)
+            return this.price.compareTo(o.price); // keep lower ask prices top of book
+        else
+            return 0; // Both orders aren't of the same order type
     }
 }

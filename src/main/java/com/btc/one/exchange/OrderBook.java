@@ -1,12 +1,12 @@
 package com.btc.one.exchange;
 
-import com.google.common.collect.EvictingQueue;
-
 import java.util.Iterator;
+import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 public class OrderBook {
-    private EvictingQueue<Order> bids = EvictingQueue.create(10); //TODO: Revisit and sort by price
-    private EvictingQueue<Order> asks = EvictingQueue.create(10);
+    private Set<Order> bids = new ConcurrentSkipListSet<>();
+    private Set<Order> asks = new ConcurrentSkipListSet<>();
 
     public void newOrder(Order order) {
         if (order.getType() == OrderType.BUY)
