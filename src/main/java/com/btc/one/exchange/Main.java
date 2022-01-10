@@ -1,5 +1,6 @@
 package com.btc.one.exchange;
 
+import com.btc.one.exchange.order.OrderBook;
 import io.vertx.core.Vertx;
 import lombok.extern.java.Log;
 

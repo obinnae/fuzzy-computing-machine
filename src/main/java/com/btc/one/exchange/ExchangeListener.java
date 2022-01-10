@@ -4,6 +4,7 @@ import com.btc.one.exchange.message.OrderSubscriptionResponse;
 import com.btc.one.exchange.message.SubscriptionAckResponse;
 import com.btc.one.exchange.message.SubscriptionRequest;
 import com.btc.one.exchange.message.SubscriptionResponse;
+import com.btc.one.exchange.order.Order;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Handler;
 import io.vertx.core.Promise;

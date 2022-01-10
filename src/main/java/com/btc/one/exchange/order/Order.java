@@ -1,4 +1,4 @@
-package com.btc.one.exchange;
+package com.btc.one.exchange.order;
 
 import com.btc.one.exchange.message.OrderSubscriptionResponse;
 import lombok.NonNull;

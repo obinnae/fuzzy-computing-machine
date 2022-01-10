@@ -1,4 +1,4 @@
-package com.btc.one.exchange;
+package com.btc.one.exchange.order;
 
 import lombok.Getter;
 
@@ -20,7 +20,7 @@ public enum OrderType {
         }
     }
 
-    private OrderType(String name) {
+    OrderType(String name) {
         this.name = name;
     }
 
