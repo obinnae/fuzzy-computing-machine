@@ -1,12 +1,10 @@
 package com.btc.one.exchange.order;
 
 import java.util.Iterator;
-import java.util.Set;
-import java.util.concurrent.ConcurrentSkipListSet;
 
 public class OrderBook {
-    private Set<Order> bids = new ConcurrentSkipListSet<>();
-    private Set<Order> asks = new ConcurrentSkipListSet<>();
+    private OrderBookColumn bids = new OrderBookColumn(10);
+    private OrderBookColumn asks = new OrderBookColumn(10);
 
     public void newOrder(Order order) {
         if (order.getType() == OrderType.BUY)
