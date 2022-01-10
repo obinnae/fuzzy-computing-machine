@@ -3,12 +3,17 @@ package com.btc.one.exchange;
 import io.vertx.core.Vertx;
 import lombok.extern.java.Log;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Log
 public class Main {
 
     public static void main(String[] args) {
         Vertx vertx = Vertx.vertx();
         String product = args.length > 0 ? args[0] : "ETH-USD";
+
+        Map<String, OrderBook> orderBooks = new HashMap<>();
 
         ExchangeListener exchangeListener = new ExchangeListener(new Subscription());
         vertx.deployVerticle(exchangeListener, ar -> {
@@ -20,7 +25,12 @@ public class Main {
             }
             else {
                 log.info(String.format("Successfully deployed exchange listener. Deployment ID: %s", ar.result()));
-                exchangeListener.listen(product, order -> System.out.println("order = " + order));
+                OrderBook orderBook = new OrderBook();
+                orderBooks.put(product, orderBook);
+                exchangeListener.listen(product, order -> {
+                    orderBook.newOrder(order);
+                    System.out.println(orderBook);
+                });
             }
         });
 
