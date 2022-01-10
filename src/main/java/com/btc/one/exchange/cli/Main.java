@@ -1,9 +1,12 @@
-package com.btc.one.exchange;
+package com.btc.one.exchange.cli;
 
+import com.btc.one.exchange.ExchangeListener;
+import com.btc.one.exchange.Subscription;
 import com.btc.one.exchange.order.OrderBook;
 import io.vertx.core.Vertx;
 import lombok.extern.java.Log;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +31,7 @@ public class Main {
                 log.info(String.format("Successfully deployed exchange listener. Deployment ID: %s", ar.result()));
                 OrderBook orderBook = new OrderBook();
                 orderBooks.put(product, orderBook);
-                exchangeListener.listen(product, order -> {
+                exchangeListener.listen(Collections.singletonList(product), order -> {
                     orderBook.newOrder(order);
                     System.out.println(orderBook);
                 });

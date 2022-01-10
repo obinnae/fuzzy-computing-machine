@@ -14,6 +14,8 @@ import io.vertx.core.http.WebSocket;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 
+import java.util.Collection;
+
 @Log
 @RequiredArgsConstructor
 public class ExchangeListener extends AbstractVerticle {
@@ -45,10 +47,10 @@ public class ExchangeListener extends AbstractVerticle {
 
     /**
      * Listen for exchange orders for a product and asynchronously handle/consume such updates.
-     * @param product the product to subscribe to. Should be a valid Crypto-Crypto or Crypto-Currency pair.
+     * @param products the products to subscribe to. Should be a collection of valid Crypto-Crypto or Crypto-Currency pairs.
      * @param newOrderHandler a handler to be asynchronously called when there are new order updates.
      */
-    public void listen(String product, Handler<Order> newOrderHandler) {
+    public void listen(Collection<? extends String> products, Handler<Order> newOrderHandler) {
         webSocket.textMessageHandler(update -> {
             SubscriptionResponse subscriptionResponse = SubscriptionResponse.fromString(update);
             if (subscriptionResponse instanceof SubscriptionAckResponse) {
@@ -61,7 +63,7 @@ public class ExchangeListener extends AbstractVerticle {
                 newOrderHandler.handle(order);
             }
         });
-        SubscriptionRequest subscriptionRequest = subscription.subscribe(product);
+        SubscriptionRequest subscriptionRequest = subscription.subscribe(products);
         webSocket.writeTextMessage(subscriptionRequest.toString());
     }
 }
