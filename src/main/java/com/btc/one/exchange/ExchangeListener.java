@@ -1,5 +1,7 @@
 package com.btc.one.exchange;
 
+import com.btc.one.exchange.message.OrderSubscriptionResponse;
+import com.btc.one.exchange.message.SubscriptionAckResponse;
 import com.btc.one.exchange.message.SubscriptionRequest;
 import com.btc.one.exchange.message.SubscriptionResponse;
 import io.vertx.core.AbstractVerticle;
@@ -41,7 +43,15 @@ public class ExchangeListener extends AbstractVerticle {
     public void listen(String product, Handler<Order> newOrderHandler) {
         webSocket.textMessageHandler(update -> {
             SubscriptionResponse subscriptionResponse = SubscriptionResponse.fromString(update);
-            System.out.println("subscriptionResponse = " + subscriptionResponse);
+            if (subscriptionResponse instanceof SubscriptionAckResponse) {
+                SubscriptionAckResponse subscriptionAckResponse = (SubscriptionAckResponse) subscriptionResponse;
+                log.info(String.format("Listening to updates for %s", String.join(", ", subscriptionAckResponse.getChannels().get(0).getProduct_ids())));
+            }
+            else {
+                OrderSubscriptionResponse orderSubscriptionResponse = (OrderSubscriptionResponse) subscriptionResponse;
+                Order order = Order.fromExchangeUpdate(orderSubscriptionResponse);
+                newOrderHandler.handle(order);
+            }
         });
         SubscriptionRequest subscriptionRequest = subscription.subscribe(product);
         webSocket.writeTextMessage(subscriptionRequest.toString());

@@ -20,7 +20,7 @@ public class Main {
             }
             else {
                 log.info(String.format("Successfully deployed exchange listener. Deployment ID: %s", ar.result()));
-                exchangeListener.listen(product, null);
+                exchangeListener.listen(product, order -> System.out.println("order = " + order));
             }
         });
 
