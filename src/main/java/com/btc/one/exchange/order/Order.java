@@ -45,6 +45,6 @@ public class Order implements Comparable<Order> {
         else if (this.type == OrderType.SELL && o.type == OrderType.SELL)
             return this.price.compareTo(o.price); // keep lower ask prices top of book
         else
-            return 0; // Both orders aren't of the same order type
+            return 0; // Both orders aren't of the same order type; treat as same.
     }
 }

@@ -6,6 +6,11 @@ public class OrderBook {
     private OrderBookColumn bids = new OrderBookColumn(10);
     private OrderBookColumn asks = new OrderBookColumn(10);
 
+    /**
+     * Add a new order to the order book.
+     * Buy orders will be added to the bids column, and sell orders to the asks column.
+     * @param order the order to be added to the book.
+     */
     public void newOrder(Order order) {
         if (order.getType() == OrderType.BUY)
             bids.add(order);

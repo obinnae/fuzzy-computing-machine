@@ -10,6 +10,10 @@ public class OrderBookColumn {
     private final int maxSize;
     private final ConcurrentSkipListSet<Order> column = new ConcurrentSkipListSet<>();
 
+    /**
+     * Add an order to the column preserving the natural ordering and without exceeding the max size.
+     * @param order the order to be added.
+     */
     public void add(Order order) {
         if (column.size() >= maxSize) {
             // if we're at capacity, compare order with the last element in columns

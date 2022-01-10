@@ -20,10 +20,11 @@ public class ExchangeListener extends AbstractVerticle {
 
     private WebSocket webSocket;
     private final Subscription subscription;
+    private static final int MAX_WEB_SOCKET_FRAME_SIZE =  HttpClientOptions.DEFAULT_MAX_WEBSOCKET_FRAME_SIZE * 100;
 
     @Override
     public void start(Promise<Void> startPromise) {
-        HttpClientOptions httpClientOptions = new HttpClientOptions().setMaxWebSocketFrameSize(65536 * 100);
+        HttpClientOptions httpClientOptions = new HttpClientOptions().setMaxWebSocketFrameSize(MAX_WEB_SOCKET_FRAME_SIZE);
         HttpClient httpClient = vertx.createHttpClient(httpClientOptions);
         httpClient.webSocketAbs("wss://ws-feed.exchange.coinbase.com", null, null, null, ar -> {
             if (ar.failed()) {
@@ -32,6 +33,7 @@ public class ExchangeListener extends AbstractVerticle {
                 startPromise.fail(ar.cause());
             } else {
                 webSocket = ar.result();
+                webSocket.closeHandler(closeAction -> log.fine("Closing exchange stream"));
                 try {
                     super.start(startPromise);
                 } catch (Exception e) {
@@ -41,6 +43,11 @@ public class ExchangeListener extends AbstractVerticle {
         });
     }
 
+    /**
+     * Listen for exchange orders for a product and asynchronously handle/consume such updates.
+     * @param product the product to subscribe to. Should be a valid Crypto-Crypto or Crypto-Currency pair.
+     * @param newOrderHandler a handler to be asynchronously called when there are new order updates.
+     */
     public void listen(String product, Handler<Order> newOrderHandler) {
         webSocket.textMessageHandler(update -> {
             SubscriptionResponse subscriptionResponse = SubscriptionResponse.fromString(update);
